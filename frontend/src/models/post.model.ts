@@ -1,4 +1,5 @@
 abstract class CreatePostDto {
+  readonly id: number
   readonly link: string
   readonly title: string
   readonly description: string
@@ -10,6 +11,7 @@ export class PostModel extends CreatePostDto {
   constructor(dto: CreatePostDto) {
     super()
 
+    this.id = dto.id
     this.link = dto.link
     this.title = dto.title
     this.description = dto.description
@@ -19,9 +21,10 @@ export class PostModel extends CreatePostDto {
 
 export function getPostModelFromJson(json: Record<string, unknown>): PostModel {
   return new PostModel({
+    id: parseInt(json.id) || 0,
     link: String(json.link),
     title: String(json.title),
-    description: String(json.description),
-    createdAt: new Date(json.createdAt),
+    description: String(json.descr),
+    createdAt: new Date(json.date),
   })
 }
