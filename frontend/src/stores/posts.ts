@@ -19,5 +19,20 @@ export const usePostsStore = defineStore('posts', () => {
     }
   }
 
-  return { posts, getPosts }
+  async function parseNewPosts(query: string): Promise<void> {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/parse`, {
+      query,
+    })
+
+    posts.value.splice(0, posts.value.length)
+
+    const parsedPosts = response.data?.posts
+    if (!Array.isArray(parsedPosts)) return
+
+    for (const post of parsedPosts) {
+      posts.value.push(getPostModelFromJson(post));
+    }
+  }
+
+  return { posts, getPosts, parseNewPosts }
 })
