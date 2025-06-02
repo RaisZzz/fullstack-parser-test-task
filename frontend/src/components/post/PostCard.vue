@@ -9,10 +9,42 @@ defineProps({
 
 <template>
   <a class="post" :href="post.link" target="_blank">
-    <p class="post__title">{{ post.title }}</p>
-    <p class="post__description">{{ post.description }}</p>
-    <p class="post__date">{{ post.createdAt.toLocaleDateString() }}</p>
+    <span class="post__top">
+      <span class="post__title">{{ post.title }}</span>
+      <span class="post__date">{{ post.createdAt.toLocaleDateString() }}</span>
+    </span>
+    <span class="post__description">{{ post.description }}</span>
   </a>
 </template>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+@use '@/assets/sass/variables' as *
+
+.post
+  padding: 15px
+  border-radius: 12px
+  border: 2px solid #ecf0f1
+  display: flex
+  flex-direction: column
+  gap: 10px
+  text-decoration: none
+  background-color: $background-color
+  color: $on-background-color
+
+  &__top
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 10px
+
+  &__title
+    font-weight: 600
+
+  &__description
+    font-size: 15px
+
+  &__date
+    font-size: 12px
+    opacity: 0.5
+</style>

@@ -42,6 +42,9 @@ onMounted(postsStore.getPosts)
   width: 100%
   overflow-y: auto
   padding-top: 100px
+  display: flex
+  flex-direction: column
+  gap: 10px
 
   &__container
     height: 100dvh
