@@ -4,11 +4,13 @@
  */
 exports.up = function(knex) {
   return knex.schema.createTable('posts', function(table) {
-    table.increments('id');
-    table.string('link').notNullable();
+    table.increments('id').primary();
+    table.string('link').notNullable().unique();
     table.string('title').notNullable();
-    table.string('descr').notNullable();
-    table.timestamps(true, true);
+    table.text('descr').notNullable();
+    table.specificType('date', 'timestamp without time zone').notNullable().defaultTo(knex.fn.now());
+
+    table.index(['title', 'descr'], 'posts_search_idx');
   });
 };
 

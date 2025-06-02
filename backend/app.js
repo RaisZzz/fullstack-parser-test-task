@@ -3,6 +3,7 @@ const cors = require('cors');
 const createError = require('http-errors');
 const errorMiddleware = require('./middlewares/error.middleware');
 const routes = require('./routes');
+require('dotenv').config();
 
 const app = express();
 
