@@ -5,5 +5,6 @@ const router = express.Router();
 const postsController = new PostsController();
 
 router.get('/parse', postsController.getParsedPosts);
+router.post('/parse', postsController.parseNewPosts);
 
 module.exports = router;

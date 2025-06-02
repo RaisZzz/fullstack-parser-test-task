@@ -8,7 +8,7 @@ exports.up = function(knex) {
     table.string('link').notNullable().unique();
     table.string('title').notNullable();
     table.text('descr').notNullable();
-    table.specificType('date', 'timestamp without time zone').notNullable().defaultTo(knex.fn.now());
+    table.specificType('date', 'timestamp without time zone').notNullable();
 
     table.index(['title', 'descr'], 'posts_search_idx');
   });

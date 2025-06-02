@@ -5,12 +5,17 @@ class Post {
     return knex('posts').select('*').where({ link }).first()
   }
 
-  async create({ link, title, description }) {
-    return knex('posts').insert({ link, title, descr: description })
-  }
-
   async getAll() {
     return knex('posts').select('*');
+  }
+
+  async create({ link, title, description, createdAt }) {
+    const [post] = await knex('posts').insert({ link, title, descr: description, date: createdAt }).returning('*')
+    return post
+  }
+
+  async destroyAll() {
+    return knex('posts').delete()
   }
 }
 
