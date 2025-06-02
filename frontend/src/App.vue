@@ -2,6 +2,7 @@
 import {usePostsStore} from "@/stores/posts.ts";
 import {onMounted, ref, type Ref} from "vue";
 import PostCard from "@/components/post/PostCard.vue";
+import MainLoader from "@/components/MainLoader.vue";
 
 const postsStore = usePostsStore()
 
@@ -22,6 +23,7 @@ onMounted(postsStore.getPosts)
       <input v-model="postsQuery" type="text" placeholder="Поиск...">
       <input type="submit" value="Найти" />
     </form>
+    <MainLoader :size="20" />
     <div class="posts">
       <PostCard v-for="post in postsStore.posts" :key="post.id" :post="post" />
     </div>

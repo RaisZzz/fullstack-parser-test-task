@@ -5,34 +5,53 @@ import {getPostModelFromJson, type PostModel} from "@/models/post.model.ts";
 import axios from "axios";
 
 export const usePostsStore = defineStore('posts', () => {
+  const postsLoading: Ref<boolean> = ref(false)
   const posts: Ref<PostModel[]> = ref([])
 
   async function getPosts(): Promise<void> {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/parse`)
-    const parsedPosts = response.data?.posts
-    if (!Array.isArray(parsedPosts)) return
+    if (postsLoading.value) return
 
-    posts.value.splice(0, posts.value.length)
+    postsLoading.value = true
 
-    for (const post of parsedPosts) {
-      posts.value.push(getPostModelFromJson(post));
-    }
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/parse`)
+      const parsedPosts = response.data?.posts
+      if (!Array.isArray(parsedPosts)) return
+
+      posts.value.splice(0, posts.value.length)
+
+      for (const post of parsedPosts) {
+        posts.value.push(getPostModelFromJson(post));
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {}
+
+    postsLoading.value = false
   }
 
   async function parseNewPosts(query: string): Promise<void> {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/parse`, {
-      query,
-    })
+    if (postsLoading.value) return
 
-    posts.value.splice(0, posts.value.length)
+    postsLoading.value = true
 
-    const parsedPosts = response.data?.posts
-    if (!Array.isArray(parsedPosts)) return
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/parse`, {
+        query,
+      })
 
-    for (const post of parsedPosts) {
-      posts.value.push(getPostModelFromJson(post));
-    }
+      posts.value.splice(0, posts.value.length)
+
+      const parsedPosts = response.data?.posts
+      if (!Array.isArray(parsedPosts)) return
+
+      for (const post of parsedPosts) {
+        posts.value.push(getPostModelFromJson(post));
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {}
+
+    postsLoading.value = false
   }
 
-  return { posts, getPosts, parseNewPosts }
+  return { posts, postsLoading, getPosts, parseNewPosts }
 })
