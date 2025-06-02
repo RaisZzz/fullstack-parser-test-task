@@ -9,7 +9,7 @@ const props = defineProps({
 const style: ComputedRef<string> = computed(() => {
   return `
     width: ${props.size}px;
-    border: ${props.size / 5}px solid ${props.color};
+    border: ${props.size / 6}px solid ${props.color};
   `
 })
 </script>
