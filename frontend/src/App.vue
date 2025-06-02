@@ -1,20 +1,25 @@
 <script lang="ts" setup>
 import {usePostsStore} from "@/stores/posts.ts";
-import {onMounted, ref, type Ref} from "vue";
+import {onMounted, ref, type Ref, watch} from "vue";
 import PostCard from "@/components/post/PostCard.vue";
 import MainLoader from "@/components/MainLoader.vue";
 
 const postsStore = usePostsStore()
 
 const postsQuery: Ref<string> = ref('')
+const showEmptyError: Ref<boolean> = ref(false)
 
 const searchPosts = (): void => {
-  if (!postsQuery.value.length) return
+  if (!postsQuery.value.length) {
+    showEmptyError.value = true
+    return
+  }
 
   postsStore.parseNewPosts(postsQuery.value)
 }
 
 onMounted(postsStore.getPosts)
+watch(postsQuery, () => showEmptyError.value = false)
 </script>
 
 <template>
@@ -24,7 +29,18 @@ onMounted(postsStore.getPosts)
       :class="{ active : postsStore.posts.length }"
       @submit.prevent="searchPosts"
     >
-      <input class="input posts__input" v-model="postsQuery" type="text" placeholder="Поиск...">
+      <div class="input-wrapper">
+        <input
+          class="input posts__input"
+          :class="{ error : showEmptyError }"
+          v-model="postsQuery"
+          type="text"
+          placeholder="Поиск..."
+        >
+        <Transition name="fade">
+          <p v-if="showEmptyError" class="input__error">Введите значение</p>
+        </Transition>
+      </div>
       <input class="button posts__button" type="submit" value="Найти" />
     </form>
     <TransitionGroup name="fade">
@@ -75,6 +91,7 @@ onMounted(postsStore.getPosts)
     max-width: 100%
     border-top-right-radius: 0
     border-bottom-right-radius: 0
+    border-right-width: 0
 
   &__button
     border-top-left-radius: 0
